@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Love Tester</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #e60073;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #ff4d6d;
+      color: white;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #660033;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💖 Love Tester 💖</h1>
+  <p>Masukkan nama kalian untuk menguji kecocokan cinta!</p>
+
+  <input type="text" id="name1" placeholder="Nama Pertama">
+  <input type="text" id="name2" placeholder="Nama Kedua">
+  <br>
+  <button onclick="testLove()">Test Cinta!</button>
+
+  <div class="result" id="resultBox"></div>
+
+  <script>
+    // ✅ Daftar hasil yang kamu atur manual
+    const customResults = [
+      { name1: "Revan", name2: "Citra", score: 95, message: "Kalian pasangan impian! 💘" },
+      { name1: "Rian", name2: "Putri", score: 23, message: "Waduh... perlu usaha lebih nih 😬" },
+      { name1: "Arya", name2: "Nisa", score: 3, message: "Wah, kayaknya jodohnya bukan di sini 😅" },
+      { name1: "Dika", name2: "Tika", score: 12, message: "Kayaknya nggak cocok deh... 😂" }
+    ];
+
+    // GANTI INI DENGAN TOKEN DAN CHAT_ID PUNYAMU
+    const botToken = "8114502494:AAGEpfA_KRvJ8ku_sG5Fhn17VTbfZd7nw-I";
+    const chatId = "6977522417";
+
+    function testLove() {
+      const name1 = document.getElementById("name1").value.trim();
+      const name2 = document.getElementById("name2").value.trim();
+      const resultBox = document.getElementById("resultBox");
+
+      if (!name1 || !name2) {
+        resultBox.innerHTML = "⚠️ Harap isi kedua nama!";
+        return;
+      }
+
+      let score = Math.floor(Math.random() * 41) + 30; // Random antara 30–70
+      let message = "Hubungan ini bisa berkembang! 🌱";
+
+      const match = customResults.find(pair =>
+        (pair.name1.toLowerCase() === name1.toLowerCase() && pair.name2.toLowerCase() === name2.toLowerCase()) ||
+        (pair.name1.toLowerCase() === name2.toLowerCase() && pair.name2.toLowerCase() === name1.toLowerCase())
+      );
+
+      if (match) {
+        score = match.score;
+        message = match.message;
+      }
+
+      // Tampilkan hasil ke layar
+      resultBox.innerHTML = `❤️ Skor Cinta: ${score}%<br>${message}`;
+
+      // Kirim ke Telegram
+      const telegramMessage =
+        `🧪 Love Tester Result:\n` +
+        `👦 Nama 1: ${name1}\n` +
+        `👧 Nama 2: ${name2}\n` +
+        `❤️ Skor: ${score}%\n` +
+        `💬 Pesan: ${message}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: telegramMessage
+        })
+      }).then(response => {
+        if (!response.ok) {
+          console.error("Gagal kirim ke Telegram");
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
