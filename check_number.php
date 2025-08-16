@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Ganti dengan API key Anda dari NumVerify (https://numverify.com)
-$api_key = "API_KEY_ANDA";
+$api_key = "f8820f5bd7eb7f15b9661d72711ff2f4";
 
 // Ambil nomor telepon dari request
 $phoneNumber = isset($_POST['phoneNumber']) ? $_POST['phoneNumber'] : '';
