@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGL Clone</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            cursor: pointer;
+        }
+
+        .hamburger-menu div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            border-radius: 2px;
+        }
+
+        .app-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .link-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .link-text {
+            font-size: 14px;
+            word-break: break-all;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .copy-btn {
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .toggle-form a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .message-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #6a11cb;
+        }
+
+        .message-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="hamburger-menu">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="app-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <h1>NGL Clone</h1>
+            <p>Terima pesan anonim dari temanmu</p>
+        </div>
+
+        <div class="content">
+            <!-- Halaman Login -->
+            <div id="login-page">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Masukkan email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Masukkan password">
+                </div>
+                <button class="btn" id="login-btn">Login</button>
+                
+                <div class="toggle-form">
+                    Tidak punya akun? <a id="go-to-register">Daftar di sini</a>
+                </div>
+            </div>
+
+            <!-- Halaman Register -->
+            <div id="register-page" class="hidden">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" placeholder="Buat username">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Masukkan email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" placeholder="Buat password (min. 6 karakter)">
+                </div>
+                <button class="btn" id="register-btn">Daftar</button>
+                
+                <div class="toggle-form">
+                    Sudah punya akun? <a id="go-to-login">Login di sini</a>
+                </div>
+            </div>
+
+            <!-- Halaman Dashboard -->
+            <div id="dashboard-page" class="hidden">
+                <div class="link-container">
+                    <p class="link-text" id="user-link">https://ngl-clone.com/send?to=user123</p>
+                    <button class="copy-btn" id="copy-link-btn">
+                        <i class="fas fa-copy"></i> Salin Link
+                    </button>
+                </div>
+                
+                <h3 style="margin-top: 20px;">Pesan yang Diterima</h3>
+                <div class="message-list" id="message-list">
+                    <!-- Daftar pesan akan dimuat di sini -->
+                </div>
+                
+                <button class="btn" id="logout-btn" style="margin-top: 20px; background: #f44336;">
+                    Logout
+                </button>
+            </div>
+
+            <!-- Halaman Kirim Pesan -->
+            <div id="send-page" class="hidden">
+                <div class="form-group">
+                    <label for="message-text">Pesan Anonim</label>
+                    <textarea id="message-text" rows="4" placeholder="Ketik pesan anonim di sini..." style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; resize: vertical;"></textarea>
+                </div>
+                <button class="btn" id="send-message-btn">Kirim Pesan</button>
+                
+                <div class="toggle-form">
+                    Ingin menerima pesan? <a id="go-to-login-from-send">Login di sini</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Pesan berhasil dikirim!</div>
+
+    <script>
+        // Konfigurasi Firebase (ganti dengan konfigurasi project Firebase Anda)
+        const firebaseConfig = {
+             apiKey: "AIzaSyD6E-2Wxdw2zFUWpAztn53g0BvfhmlRJzY",
+    authDomain: "database-akun-dan.firebaseapp.com",
+    projectId: "database-akun-dan",
+    storageBucket: "database-akun-dan.firebasestorage.app",
+    messagingSenderId: "252721874170",
+    appId: "1:252721874170:web:9aaa4597017aaebbb63543",
+        };
+
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Elemen DOM
+        const loginPage = document.getElementById('login-page');
+        const registerPage = document.getElementById('register-page');
+        const dashboardPage = document.getElementById('dashboard-page');
+        const sendPage = document.getElementById('send-page');
+        
+        const loginEmail = document.getElementById('login-email');
+        const loginPassword = document.getElementById('login-password');
+        const loginBtn = document.getElementById('login-btn');
+        
+        const registerUsername = document.getElementById('register-username');
+        const registerEmail = document.getElementById('register-email');
+        const registerPassword = document.getElementById('register-password');
+        const registerBtn = document.getElementById('register-btn');
+        
+        const userLink = document.getElementById('user-link');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const messageList = document.getElementById('message-list');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        const messageText = document.getElementById('message-text');
+        const sendMessageBtn = document.getElementById('send-message-btn');
+        
+        const goToRegister = document.getElementById('go-to-register');
+        const goToLogin = document.getElementById('go-to-login');
+        const goToLoginFromSend = document.getElementById('go-to-login-from-send');
+        
+        const notification = document.getElementById('notification');
+
+        // Navigasi antar halaman
+        goToRegister.addEventListener('click', () => {
+            loginPage.classList.add('hidden');
+            registerPage.classList.remove('hidden');
+        });
+
+        goToLogin.addEventListener('click', () => {
+            registerPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+        });
+
+        goToLoginFromSend.addEventListener('click', () => {
+            sendPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+        });
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, isSuccess = true) {
+            notification.textContent = message;
+            notification.style.backgroundColor = isSuccess ? '#4CAF50' : '#f44336';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Registrasi pengguna baru
+        registerBtn.addEventListener('click', () => {
+            const username = registerUsername.value;
+            const email = registerEmail.value;
+            const password = registerPassword.value;
+            
+            if (!username || !email || !password) {
+                showNotification('Semua field harus diisi!', false);
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password minimal 6 karakter!', false);
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Simpan data pengguna ke Firestore
+                    return db.collection('users').doc(user.uid).set({
+                        username: username,
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    showNotification('Akun berhasil dibuat!');
+                    registerPage.classList.add('hidden');
+                    dashboardPage.classList.remove('hidden');
+                    loadUserData();
+                })
+                .catch((error) => {
+                    showNotification('Error: ' + error.message, false);
+                });
+        });
+
+        // Login pengguna
+        loginBtn.addEventListener('click', () => {
+            const email = loginEmail.value;
+            const password = loginPassword.value;
+            
+            if (!email || !password) {
+                showNotification('Email dan password harus diisi!', false);
+                return;
+            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    showNotification('Login berhasil!');
+                    loginPage.classList.add('hidden');
+                    dashboardPage.classList.remove('hidden');
+                    loadUserData();
+                })
+                .catch((error) => {
+                    showNotification('Error: ' + error.message, false);
+                });
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showNotification('Logout berhasil!');
+                    dashboardPage.classList.add('hidden');
+                    loginPage.classList.remove('hidden');
+                })
+                .catch((error) => {
+                    showNotification('Error: ' + error.message, false);
+                });
+        });
+
+        // Salin link
+        copyLinkBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(userLink.textContent)
+                .then(() => {
+                    showNotification('Link berhasil disalin!');
+                })
+                .catch(() => {
+                    showNotification('Gagal menyalin link', false);
+                });
+        });
+
+        // Kirim pesan
+        sendMessageBtn.addEventListener('click', () => {
+            const message = messageText.value;
+            const urlParams = new URLSearchParams(window.location.search);
+            const toUserId = urlParams.get('to');
+            
+            if (!message) {
+                showNotification('Pesan tidak boleh kosong!', false);
+                return;
+            }
+            
+            if (!toUserId) {
+                showNotification('Link tidak valid!', false);
+                return;
+            }
+            
+            // Simpan pesan ke Firestore
+            db.collection('messages').add({
+                to: toUserId,
+                text: message,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                showNotification('Pesan berhasil dikirim!');
+                messageText.value = '';
+            })
+            .catch((error) => {
+                showNotification('Error: ' + error.message, false);
+            });
+        });
+
+        // Memuat data pengguna dan pesan
+        function loadUserData() {
+            const user = auth.currentUser;
+            
+            if (user) {
+                // Dapatkan data pengguna dari Firestore
+                db.collection('users').doc(user.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            userLink.textContent = window.location.origin + window.location.pathname + '?to=' + user.uid;
+                            
+                            // Load pesan
+                            loadMessages(user.uid);
+                        }
+                    })
+                    .catch((error) => {
+                        showNotification('Error: ' + error.message, false);
+                    });
+            }
+        }
+
+        // Memuat pesan
+        function loadMessages(userId) {
+            db.collection('messages')
+                .where('to', '==', userId)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot((querySnapshot) => {
+                    messageList.innerHTML = '';
+                    
+                    querySnapshot.forEach((doc) => {
+                        const message = doc.data();
+                        const messageItem = document.createElement('div');
+                        messageItem.className = 'message-item';
+                        
+                        const messageText = document.createElement('div');
+                        messageText.className = 'message-text';
+                        messageText.textContent = message.text;
+                        
+                        const messageTime = document.createElement('div');
+                        messageTime.className = 'message-time';
+                        
+                        if (message.createdAt) {
+                            messageTime.textContent = new Date(message.createdAt.toDate()).toLocaleString();
+                        } else {
+                            messageTime.textContent = 'Baru saja';
+                        }
+                        
+                        messageItem.appendChild(messageText);
+                        messageItem.appendChild(messageTime);
+                        messageList.appendChild(messageItem);
+                    });
+                });
+        }
+
+        // Cek status autentikasi
+        auth.onAuthStateChanged((user) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const toUserId = urlParams.get('to');
+            
+            if (user) {
+                // Pengguna sudah login
+                if (toUserId) {
+                    // Jika ada parameter 'to', tampilkan halaman kirim pesan
+                    sendPage.classList.remove('hidden');
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.add('hidden');
+                    dashboardPage.classList.add('hidden');
+                } else {
+                    // Jika tidak, tampilkan dashboard
+                    dashboardPage.classList.remove('hidden');
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.add('hidden');
+                    sendPage.classList.add('hidden');
+                    loadUserData();
+                }
+            } else {
+                // Pengguna belum login
+                if (toUserId) {
+                    // Jika ada parameter 'to', tampilkan halaman kirim pesan
+                    sendPage.classList.remove('hidden');
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.add('hidden');
+                    dashboardPage.classList.add('hidden');
+                } else {
+                    // Jika tidak, tampilkan halaman login
+                    loginPage.classList.remove('hidden');
+                    registerPage.classList.add('hidden');
+                    dashboardPage.classList.add('hidden');
+                    sendPage.classList.add('hidden');
+                }
+            }
+        });
+
+        // Cek apakah URL memiliki parameter 'to'
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('to')) {
+            sendPage.classList.remove('hidden');
+            loginPage.classList.add('hidden');
+            registerPage.classList.add('hidden');
+            dashboardPage.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
