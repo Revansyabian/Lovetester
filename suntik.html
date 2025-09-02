@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel SMM - Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f5f8fa;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+            overflow-x: auto;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .service-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .service-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            color: #333;
+            font-weight: normal;
+            border-radius: 0;
+        }
+        
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        
+        .tab button.active {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            animation: fadeEffect 1s;
+        }
+        
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Panel SMM Dashboard</h1>
+            <p>Kelola layanan sosial media marketing dengan mudah</p>
+        </header>
+
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Profile')">Profile</button>
+            <button class="tablinks" onclick="openTab(event, 'Services')">Services</button>
+            <button class="tablinks" onclick="openTab(event, 'Order')">Buat Order</button>
+            <button class="tablinks" onclick="openTab(event, 'Status')">Cek Status</button>
+        </div>
+
+        <div id="Profile" class="tabcontent" style="display:block;">
+            <div class="card">
+                <h2>Informasi Profile</h2>
+                <div class="result">
+                    <?php
+                    // Include class dan buat instance
+                    require_once 'dcode.class.php'; // File terpisah untuk class
+                    $api = new dcode();
+                    
+                    // Cek profil
+                    $profile = $api->profile();
+                    if ($profile) {
+                        echo "<pre>";
+                        print_r($profile);
+                        echo "</pre>";
+                    } else {
+                        echo "<p>Gagal mengambil data profile. Pastikan API URL dan kunci sudah benar.</p>";
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div id="Services" class="tabcontent">
+            <div class="card">
+                <h2>Daftar Layanan Tersedia</h2>
+                <div class="result">
+                    <?php
+                    $services = $api->services();
+                    if ($services) {
+                        echo "<pre>";
+                        print_r($services);
+                        echo "</pre>";
+                    } else {
+                        echo "<p>Gagal mengambil data layanan.</p>";
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div id="Order" class="tabcontent">
+            <div class="card">
+                <h2>Buat Order Baru</h2>
+                <form method="post" action="">
+                    <div class="form-group">
+                        <label for="service_id">ID Layanan:</label>
+                        <input type="number" id="service_id" name="service_id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="target">Target (Username/URL):</label>
+                        <input type="text" id="target" name="target" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">Jumlah:</label>
+                        <input type="number" id="quantity" name="quantity" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="custom_comments">Komentar Kustom (opsional):</label>
+                        <textarea id="custom_comments" name="custom_comments" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="custom_link">Link Kustom (opsional):</label>
+                        <input type="text" id="custom_link" name="custom_link">
+                    </div>
+                    
+                    <button type="submit" name="buat_order">Buat Order</button>
+                </form>
+                
+                <?php
+                if (isset($_POST['buat_order'])) {
+                    $data = array(
+                        'service' => $_POST['service_id'],
+                        'target' => $_POST['target'],
+                        'quantity' => $_POST['quantity']
+                    );
+                    
+                    if (!empty($_POST['custom_comments'])) {
+                        $data['custom_comments'] = $_POST['custom_comments'];
+                    }
+                    
+                    if (!empty($_POST['custom_link'])) {
+                        $data['custom_link'] = $_POST['custom_link'];
+                    }
+                    
+                    $order = $api->order($data);
+                    
+                    echo '<div class="result">';
+                    echo "<h3>Hasil Order:</h3>";
+                    if ($order) {
+                        echo "<pre>";
+                        print_r($order);
+                        echo "</pre>";
+                    } else {
+                        echo "<p>Gagal membuat order.</p>";
+                    }
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        </div>
+
+        <div id="Status" class="tabcontent">
+            <div class="card">
+                <h2>Cek Status Order</h2>
+                <form method="post" action="">
+                    <div class="form-group">
+                        <label for="order_id">ID Order:</label>
+                        <input type="text" id="order_id" name="order_id" required>
+                    </div>
+                    
+                    <button type="submit" name="cek_status">Cek Status</button>
+                </form>
+                
+                <?php
+                if (isset($_POST['cek_status'])) {
+                    $status = $api->status($_POST['order_id']);
+                    
+                    echo '<div class="result">';
+                    echo "<h3>Status Order:</h3>";
+                    if ($status) {
+                        echo "<pre>";
+                        print_r($status);
+                        echo "</pre>";
+                    } else {
+                        echo "<p>Gagal mengambil status order.</p>";
+                    }
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        </div>
+
+        <footer>
+            <p>Panel SMM &copy; 2023 - Powered by DCode API</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Sembunyikan semua tab content
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            
+            // Hapus class active dari semua tab links
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            // Tampilkan tab yang dipilih dan tambahkan class active
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>
