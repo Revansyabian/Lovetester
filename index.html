@@ -1,112 +1,1616 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Love Tester</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to right, #ff9a9e, #fad0c4);
-      text-align: center;
-      padding: 50px;
-    }
-    h1 {
-      color: #e60073;
-    }
-    input, button {
-      padding: 10px;
-      margin: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      background-color: #ff4d6d;
-      color: white;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #660033;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSSID Money Top Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #001f3f;
+            color: #ffffff;
+            line-height: 1.5;
+            padding: 10px;
+            background: linear-gradient(135deg, #001f3f, #003366);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 191, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            animation: containerSlide 0.8s ease-out;
+        }
+        
+        @keyframes containerSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0074D9, #00BFFF);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #00BFFF;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+        
+        .section-title::before {
+            content: '▶';
+            font-size: 14px;
+            color: #00BFFF;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            color: #CCCCCC;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 15px;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
+        }
+        
+        .device-id-display {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #00BFFF;
+            word-break: break-all;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 191, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 191, 255, 0); }
+        }
+        
+        .license-info {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .license-status {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .license-valid {
+            color: #00FF88;
+        }
+        
+        .license-expired {
+            color: #FF4444;
+        }
+        
+        .license-days {
+            font-size: 14px;
+            color: #CCCCCC;
+        }
+        
+        .login-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .login-tab.active {
+            background: linear-gradient(135deg, #0074D9, #00BFFF);
+            box-shadow: 0 2px 10px rgba(0, 191, 255, 0.3);
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #CCCCCC;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field::placeholder {
+            color: #999999;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #00BFFF;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .amount-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .amount-btn {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #FFFFFF;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .amount-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .amount-btn:hover::before {
+            left: 100%;
+        }
+        
+        .amount-btn:hover {
+            background: rgba(0, 191, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .amount-btn.active {
+            background: linear-gradient(135deg, #0074D9, #00BFFF);
+            border-color: #00BFFF;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .button {
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .button:hover::before {
+            left: 100%;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, #0074D9, #00BFFF);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4);
+        }
+        
+        .button-secondary {
+            background: linear-gradient(135deg, #0056b3, #0074D9);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 116, 217, 0.4);
+        }
+        
+        .button-success {
+            background: linear-gradient(135deg, #00A86B, #00CC88);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 204, 136, 0.4);
+        }
+        
+        .button-danger {
+            background: linear-gradient(135deg, #DC3545, #FF6B6B);
+            color: white;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.4);
+        }
+        
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 191, 255, 0.6);
+        }
+        
+        .button:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+        
+        .amount-display {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #00BFFF;
+            margin: 15px 0;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 191, 255, 0.8); }
+            to { text-shadow: 0 0 30px rgba(0, 191, 255, 1); }
+        }
+        
+        .max-info {
+            text-align: center;
+            color: #CCCCCC;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        
+        .status-message {
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+            border: 1px solid;
+            font-size: 15px;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success {
+            background: rgba(0, 255, 0, 0.15);
+            color: #00FF88;
+            border-color: #00FF88;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.15);
+            color: #FF4444;
+            border-color: #FF4444;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #00BFFF;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .login-section {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #CCCCCC;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .transaction-details {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .transaction-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00BFFF;
+        }
+        
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .transaction-label {
+            color: #CCCCCC;
+            font-size: 14px;
+        }
+        
+        .transaction-value {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .transaction-success {
+            color: #00FF88;
+        }
+        
+        .transaction-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #00BFFF;
+        }
+        
+        .transaction-message {
+            color: #CCCCCC;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .access-denied {
+            text-align: center;
+            padding: 40px 20px;
+            color: #FF4444;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .access-denied h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .access-denied p {
+            color: #CCCCCC;
+            margin-bottom: 20px;
+        }
+        
+        .auto-wa-notice {
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            color: #FFC107;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: modalPop 0.4s ease-out;
+        }
+        
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal h3 {
+            color: #FF4444;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .modal p {
+            color: #CCCCCC;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(0, 191, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .feature-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #FF6B6B, #FFE66D);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 191, 255, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00BFFF;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #CCCCCC;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: #00BFFF;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 191, 255, 0.2);
+        }
+        
+        .permanent-notice {
+            background: rgba(0, 191, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+            text-align: center;
+            color: #00BFFF;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="feature-badge">PREMIUM</div>
+        
+        <div class="header">
+            <h1>BUSSID MONEY TOP UP</h1>
+            <p>Premium Licensed Service</p>
+        </div>
+        
+        <div class="section">
+            <div class="license-info" id="license-info">
+                <div class="license-status" id="license-status">Checking License...</div>
+                <div class="license-days" id="license-days"></div>
+            </div>
+            
+            <div class="device-id-display" id="device-id-display">
+                Your Permanent Device ID: <span id="device-id-text">Loading...</span>
+                <button class="copy-btn" onclick="copyDeviceId()">📋 Copy</button>
+            </div>
+            
+            <div class="permanent-notice">
+                ⚠️ Device ID ini permanen dan tidak dapat diubah. Simpan dengan baik!
+            </div>
+            
+            <div class="login-section" id="login-section">
+                <div class="login-tabs">
+                    <div class="login-tab active" data-tab="device">Device ID Login</div>
+                    <div class="login-tab" data-tab="xauth">X-Auth Login</div>
+                </div>
+                
+                <!-- Device ID Login Form -->
+                <div class="login-form active" id="device-login-form">
+                    <div class="input-group">
+                        <div class="input-label">Your Device ID (Auto-filled)</div>
+                        <input type="text" class="input-field" id="device-id-input" placeholder="Loading your Device ID..." readonly style="background: rgba(255,255,255,0.05);">
+                    </div>
+                    <button class="button button-primary" id="device-login-btn" style="width: 100%;">
+                        LOGIN WITH MY DEVICE ID
+                    </button>
+                </div>
+                
+                <!-- X-Auth Login Form -->
+                <div class="login-form" id="xauth-login-form">
+                    <div class="input-group">
+                        <div class="input-label">X-Authorization Token</div>
+                        <input type="text" class="input-field" id="xauth-input" placeholder="Masukkan X-Authorization Token">
+                    </div>
+                    <button class="button button-success" id="xauth-login-btn" style="width: 100%;">
+                        LOGIN WITH X-AUTH
+                    </button>
+                </div>
+            </div>
+            
+            <div class="section-title">Account Information</div>
+            
+            <div class="info-box" id="account-info">
+                <div class="info-row">
+                    <div class="info-label">Cash Balance</div>
+                    <div class="info-value" id="cash-amount">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Account Name</div>
+                    <div class="info-value" id="account-name">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">License Holder</div>
+                    <div class="info-value" id="license-name">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Login Method</div>
+                    <div class="info-value" id="login-method">-</div>
+                </div>
+            </div>
 
-  <h1>💖 Love Tester 💖</h1>
-  <p>Masukkan nama kalian untuk menguji kecocokan cinta!</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-transactions">0</div>
+                    <div class="stat-label">Total Transaksi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="success-rate">100%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
 
-  <input type="text" id="name1" placeholder="Nama Pertama">
-  <input type="text" id="name2" placeholder="Nama Kedua">
-  <br>
-  <button onclick="testLove()">Test Cinta!</button>
+        <div class="section" id="topup-section" style="display: none;">
+            <!-- Top Up Section Content (sama seperti sebelumnya) -->
+            <div class="section-title">Top Up Service</div>
+            
+            <div class="input-group">
+                <div class="input-label">Enter Amount (1 - 2,147,483,647)</div>
+                <input type="number" class="input-field" id="amount-input" placeholder="Masukkan jumlah" min="1" max="2147483647">
+                <div class="max-info">Maximum Amount: 2,147,483,647</div>
+            </div>
+            
+            <div class="amount-controls">
+                <button class="amount-btn" data-amount="50000000">50 JT</button>
+                <button class="amount-btn" data-amount="100000000">100 JT</button>
+                <button class="amount-btn" data-amount="500000000">500 JT</button>
+                <button class="amount-btn" data-amount="1000000000">1 M</button>
+            </div>
+            
+            <div class="amount-display" id="selected-amount">Selected Amount: 0</div>
+            
+            <div class="button-group">
+                <button class="button button-primary" id="add-cash-btn">ADD CASH</button>
+                <button class="button button-secondary" id="reduce-cash-btn">REDUCE CASH</button>
+            </div>
 
-  <div class="result" id="resultBox"></div>
+            <div class="button-group">
+                <button class="button button-success" id="refresh-btn" style="grid-column: 1 / -1;">
+                    🔄 REFRESH BALANCE
+                </button>
+            </div>
 
-  <script>
-    // ✅ Daftar hasil yang kamu atur manual
-    const customResults = [
-      { name1: "Revan", name2: "Citra", score: 95, message: "Kalian pasangan impian! 💘" },
-      { name1: "Rian", name2: "Putri", score: 23, message: "Waduh... perlu usaha lebih nih 😬" },
-      { name1: "Arya", name2: "Nisa", score: 3, message: "Wah, kayaknya jodohnya bukan di sini 😅" },
-      { name1: "Dika", name2: "Tika", score: 12, message: "Kayaknya nggak cocok deh... 😂" }
-    ];
+            <button class="button button-danger" id="delete-account-btn" style="width: 100%; margin-top: 10px;">
+                🗑️ DELETE ACCOUNT
+            </button>
+            
+            <div class="status-message" id="status-message"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div>Processing Transaction...</div>
+            </div>
+            
+            <div class="transaction-details" id="transaction-details">
+                <div class="transaction-title">TRANSACTION DETAILS</div>
+                <div class="transaction-row">
+                    <div class="transaction-label">Account Name:</div>
+                    <div class="transaction-value" id="trans-account">-</div>
+                </div>
+                <div class="transaction-row">
+                    <div class="transaction-label">Transaction Type:</div>
+                    <div class="transaction-value" id="trans-type">-</div>
+                </div>
+                <div class="transaction-row">
+                    <div class="transaction-label">Amount:</div>
+                    <div class="transaction-value" id="trans-amount">-</div>
+                </div>
+                <div class="transaction-row">
+                    <div class="transaction-label">Previous Balance:</div>
+                    <div class="transaction-value" id="trans-before">-</div>
+                </div>
+                <div class="transaction-row">
+                    <div class="transaction-label">New Balance:</div>
+                    <div class="transaction-value transaction-success" id="trans-after">-</div>
+                </div>
+                <div class="transaction-row">
+                    <div class="transaction-label">Status:</div>
+                    <div class="transaction-value transaction-success" id="trans-status">-</div>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-message">
+                        ✅ <strong>Top Up Berhasil!</strong><br>
+                        Saldo Anda telah berhasil diupdate. Silakan buka game BUSSID untuk melihat perubahan saldo.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="access-denied" id="access-denied" style="display: none;">
+            <h3>⚠️ ACCESS DENIED</h3>
+            <p>Device ID Anda tidak terdaftar dalam database license.</p>
+            <div class="auto-wa-notice">
+                <strong>Otomatis membuka WhatsApp...</strong><br>
+                Device ID Anda akan dikirim ke admin untuk pembelian license.
+            </div>
+            <p>Jika tidak otomatis terbuka, klik tombol di bawah:</p>
+            <button class="button button-primary" onclick="contactAdmin()">CONTACT ADMIN VIA WHATSAPP</button>
+        </div>
+        
+        <div class="footer">
+            <p>BUSSID Money Top Up &copy; 2024</p>
+            <p>Licensed Service - Authorized Access Only</p>
+        </div>
+    </div>
 
-    // GANTI INI DENGAN TOKEN DAN CHAT_ID PUNYAMU
-    const botToken = "8114502494:AAGEpfA_KRvJ8ku_sG5Fhn17VTbfZd7nw-I";
-    const chatId = "6977522417";
+    <!-- Modal Konfirmasi Hapus Akun -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal">
+            <h3>⚠️ HAPUS AKUN</h3>
+            <p>Apakah Anda yakin ingin menghapus akun ini?<br>
+               <strong>Tindakan ini tidak dapat dibatalkan!</strong><br>
+               Semua data dan saldo akan hilang permanen.</p>
+            <div class="modal-buttons">
+                <button class="button button-danger" id="confirm-delete">YA, HAPUS AKUN</button>
+                <button class="button button-secondary" id="cancel-delete">BATAL</button>
+            </div>
+        </div>
+    </div>
 
-    function testLove() {
-      const name1 = document.getElementById("name1").value.trim();
-      const name2 = document.getElementById("name2").value.trim();
-      const resultBox = document.getElementById("resultBox");
+    <script>
+        // Konfigurasi
+        const PLAYFAB_TITLE_ID = "4AE9";
+        const PLAYFAB_API_URL = "https://4AE9.playfabapi.com";
+        const LICENSE_BASE_URL = "https://api.github.com/repos/Revansyabian/Top-up-bussid/contents/license";
+        const ADMIN_PHONE = "6289520418604";
+        
+        // Variabel global
+        let authToken = "";
+        let cashAmount = 0;
+        let accountName = "";
+        let selectedAmount = 0;
+        let previousBalance = 0;
+        let licenseData = null;
+        let deviceId = "";
+        let totalTransactions = 0;
+        let successfulTransactions = 0;
+        let currentLoginMethod = "";
+        
+        // Elemen DOM
+        const deviceIdInput = document.getElementById('device-id-input');
+        const xauthInput = document.getElementById('xauth-input');
+        const deviceLoginBtn = document.getElementById('device-login-btn');
+        const xauthLoginBtn = document.getElementById('xauth-login-btn');
+        const loginTabs = document.querySelectorAll('.login-tab');
+        const loginForms = document.querySelectorAll('.login-form');
+        const cashAmountElement = document.getElementById('cash-amount');
+        const accountNameElement = document.getElementById('account-name');
+        const licenseNameElement = document.getElementById('license-name');
+        const loginMethodElement = document.getElementById('login-method');
+        const amountInput = document.getElementById('amount-input');
+        const addCashBtn = document.getElementById('add-cash-btn');
+        const reduceCashBtn = document.getElementById('reduce-cash-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+        const selectedAmountElement = document.getElementById('selected-amount');
+        const statusMessage = document.getElementById('status-message');
+        const loadingElement = document.getElementById('loading');
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        const transactionDetails = document.getElementById('transaction-details');
+        const topupSection = document.getElementById('topup-section');
+        const accessDenied = document.getElementById('access-denied');
+        const loginSection = document.getElementById('login-section');
+        const licenseStatus = document.getElementById('license-status');
+        const licenseDays = document.getElementById('license-days');
+        const licenseInfo = document.getElementById('license-info');
+        const accountInfo = document.getElementById('account-info');
+        const deviceIdText = document.getElementById('device-id-text');
+        const deleteModal = document.getElementById('delete-modal');
+        const confirmDeleteBtn = document.getElementById('confirm-delete');
+        const cancelDeleteBtn = document.getElementById('cancel-delete');
+        const totalTransactionsElement = document.getElementById('total-transactions');
+        const successRateElement = document.getElementById('success-rate');
 
-      if (!name1 || !name2) {
-        resultBox.innerHTML = "⚠️ Harap isi kedua nama!";
-        return;
-      }
-
-      let score = Math.floor(Math.random() * 41) + 30; // Random antara 30–70
-      let message = "kalo kecil kayak nya ga cocok";
-
-      const match = customResults.find(pair =>
-        (pair.name1.toLowerCase() === name1.toLowerCase() && pair.name2.toLowerCase() === name2.toLowerCase()) ||
-        (pair.name1.toLowerCase() === name2.toLowerCase() && pair.name2.toLowerCase() === name1.toLowerCase())
-      );
-
-      if (match) {
-        score = match.score;
-        message = match.message;
-      }
-
-      // Tampilkan hasil ke layar
-      resultBox.innerHTML = `❤️ Skor Cinta: ${score}%<br>${message}`;
-
-      // Kirim ke Telegram
-      const telegramMessage =
-        `🧪 Love Tester Result:\n` +
-        `👦 Nama 1: ${name1}\n` +
-        `👧 Nama 2: ${name2}\n` +
-        `❤️ Skor: ${score}%\n` +
-        `💬 Pesan: ${message}`;
-
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: telegramMessage
-        })
-      }).then(response => {
-        if (!response.ok) {
-          console.error("Gagal kirim ke Telegram");
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 6 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 6}s`;
+                particlesContainer.appendChild(particle);
+            }
         }
-      });
-    }
-  </script>
 
+        // Copy Device ID to clipboard
+        function copyDeviceId() {
+            navigator.clipboard.writeText(deviceId).then(() => {
+                showStatus('Device ID copied to clipboard!', true);
+            }).catch(() => {
+                showStatus('Failed to copy Device ID', false);
+            });
+        }
+
+        // Switch login tabs
+        function switchLoginTab(tabName) {
+            loginTabs.forEach(tab => {
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            loginForms.forEach(form => {
+                if (form.id === `${tabName}-login-form`) {
+                    form.classList.add('active');
+                } else {
+                    form.classList.remove('active');
+                }
+            });
+        }
+
+        // Generate Real Permanent Device ID
+        async function generatePermanentDeviceId() {
+            // Coba gunakan Web Crypto API untuk fingerprint yang lebih stabil
+            try {
+                const components = [
+                    navigator.userAgent,
+                    navigator.platform,
+                    navigator.language,
+                    navigator.hardwareConcurrency || 'unknown',
+                    screen.width + 'x' + screen.height + 'x' + screen.pixelDepth,
+                    new Date().getTimezoneOffset(),
+                    navigator.plugins.length,
+                    !!navigator.pdfViewerEnabled,
+                    navigator.maxTouchPoints || 'unknown',
+                    // Tambahkan lebih banyak komponen untuk membuat fingerprint lebih unik
+                    navigator.deviceMemory || 'unknown',
+                    navigator.connection ? navigator.connection.effectiveType : 'unknown'
+                ].join('|');
+                
+                const encoder = new TextEncoder();
+                const data = encoder.encode(components);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const deviceId = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+                
+                return deviceId;
+            } catch (error) {
+                console.error('Error generating permanent device ID:', error);
+                // Fallback ke metode yang lebih sederhana tapi tetap konsisten
+                return generateConsistentDeviceId();
+            }
+        }
+
+        function generateConsistentDeviceId() {
+            // Gunakan kombinasi yang lebih stabil untuk device ID
+            const stableComponents = [
+                navigator.userAgent,
+                navigator.platform,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset()
+            ].join('|');
+            
+            let hash = 0;
+            for (let i = 0; i < stableComponents.length; i++) {
+                const char = stableComponents.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            
+            return Math.abs(hash).toString(16).substring(0, 16).padEnd(16, '0');
+        }
+
+        async function getPermanentDeviceId() {
+            // Cek apakah sudah ada device ID yang disimpan
+            let storedId = localStorage.getItem('bussid_permanent_device_id');
+            
+            if (!storedId) {
+                // Generate device ID baru yang permanen
+                storedId = await generatePermanentDeviceId();
+                
+                // Simpan secara permanen
+                localStorage.setItem('bussid_permanent_device_id', storedId);
+                console.log('Generated new permanent Device ID:', storedId);
+            } else {
+                console.log('Using existing permanent Device ID:', storedId);
+            }
+            
+            return storedId;
+        }
+
+        // Update statistics
+        function updateStatistics(success = true) {
+            totalTransactions++;
+            if (success) successfulTransactions++;
+            
+            totalTransactionsElement.textContent = totalTransactions;
+            const successRate = totalTransactions > 0 ? Math.round((successfulTransactions / totalTransactions) * 100) : 100;
+            successRateElement.textContent = `${successRate}%`;
+        }
+
+        async function checkLicense(deviceId) {
+            setLoading(true);
+            
+            try {
+                const response = await fetch(`${LICENSE_BASE_URL}/${deviceId}.json`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('LICENSE_NOT_FOUND');
+                    }
+                    throw new Error('Gagal mengambil data license');
+                }
+                
+                const data = await response.json();
+                
+                if (data.content) {
+                    const decodedContent = atob(data.content.replace(/\n/g, ''));
+                    licenseData = JSON.parse(decodedContent);
+                } else {
+                    licenseData = data;
+                }
+                
+                return licenseData;
+                
+            } catch (error) {
+                if (error.message === 'LICENSE_NOT_FOUND') {
+                    return null;
+                }
+                throw error;
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function calculateDaysLeft(expiryDate) {
+            try {
+                const [day, month, year] = expiryDate.split('-').map(Number);
+                const expiry = new Date(year, month - 1, day);
+                const today = new Date();
+                const diffTime = expiry - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays;
+            } catch (error) {
+                console.error('Error calculating days left:', error);
+                return -1;
+            }
+        }
+
+        function updateLicenseDisplay(license) {
+            if (!license) {
+                licenseStatus.textContent = '❌ LICENSE NOT FOUND';
+                licenseStatus.className = 'license-status license-expired';
+                licenseDays.textContent = 'Device ID tidak terdaftar';
+                return false;
+            }
+
+            const daysLeft = calculateDaysLeft(license.expiry_date);
+            
+            if (daysLeft > 0) {
+                licenseStatus.textContent = '✅ LICENSE VALID';
+                licenseStatus.className = 'license-status license-valid';
+                licenseDays.textContent = `Masa aktif: ${daysLeft} hari tersisa`;
+                licenseNameElement.textContent = license.name;
+                return true;
+            } else {
+                licenseStatus.textContent = '❌ LICENSE EXPIRED';
+                licenseStatus.className = 'license-status license-expired';
+                licenseDays.textContent = `Masa aktif telah habis ${Math.abs(daysLeft)} hari yang lalu`;
+                return false;
+            }
+        }
+
+        function openWhatsAppForLicense(deviceId) {
+            const message = `Halo admin, saya ingin membeli license BUSSID Top Up.\n\n` +
+                          `Device ID: ${deviceId}\n` +
+                          `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n` +
+                          `Saya tertarik dengan layanan top up BUSSID.`;
+            
+            const url = `https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(message)}`;
+            
+            window.open(url, '_blank');
+            
+            setTimeout(() => {
+                if (!document.hasFocus()) {
+                    window.location.href = url;
+                }
+            }, 1000);
+        }
+
+        function showStatus(message, isSuccess) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message ' + (isSuccess ? 'success' : 'error');
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        function setLoading(isLoading) {
+            loadingElement.style.display = isLoading ? 'block' : 'none';
+        }
+        
+        function updateSelectedAmountDisplay() {
+            selectedAmountElement.textContent = `Selected Amount: ${selectedAmount.toLocaleString()}`;
+        }
+        
+        function showTransactionDetails(account, type, amount, before, after, status) {
+            document.getElementById('trans-account').textContent = account;
+            document.getElementById('trans-type').textContent = type;
+            document.getElementById('trans-amount').textContent = amount.toLocaleString();
+            document.getElementById('trans-before').textContent = before.toLocaleString();
+            document.getElementById('trans-after').textContent = after.toLocaleString();
+            document.getElementById('trans-status').textContent = status;
+            
+            transactionDetails.style.display = 'block';
+            transactionDetails.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Login dengan Device ID
+        async function loginWithDeviceId(deviceId) {
+            setLoading(true);
+            
+            try {
+                const loginData = {
+                    AndroidDeviceID: deviceId,
+                    TitleId: PLAYFAB_TITLE_ID,
+                    CreateAccount: false
+                };
+                
+                const response = await fetch(`${PLAYFAB_API_URL}/Client/LoginWithAndroidDeviceID`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.errorMessage || 'Login dengan Device ID gagal');
+                }
+                
+                const data = await response.json();
+                
+                if (data.data && data.data.SessionTicket) {
+                    authToken = data.data.SessionTicket;
+                    currentLoginMethod = "Device ID";
+                    await getUserInfo();
+                    showStatus('Login dengan Device ID berhasil!', true);
+                    return true;
+                } else {
+                    throw new Error('Token session tidak diterima');
+                }
+            } catch (error) {
+                showStatus('Login gagal: ' + error.message, false);
+                return false;
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // Login dengan X-Authorization
+        async function loginWithXAuth(xAuthToken) {
+            setLoading(true);
+            
+            try {
+                authToken = xAuthToken;
+                currentLoginMethod = "X-Authorization";
+                const userInfo = await getUserInfo();
+                
+                if (userInfo) {
+                    showStatus('Login dengan X-Authorization berhasil!', true);
+                    return true;
+                } else {
+                    throw new Error('X-Authorization token tidak valid');
+                }
+            } catch (error) {
+                showStatus('Login gagal: ' + error.message, false);
+                return false;
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        async function getUserInfo() {
+            if (!authToken) {
+                return null;
+            }
+            
+            try {
+                const data = {
+                    InfoRequestParameters: {
+                        GetUserAccountInfo: true,
+                        GetUserVirtualCurrency: true
+                    }
+                };
+                
+                const response = await fetch(`${PLAYFAB_API_URL}/Client/GetPlayerCombinedInfo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Authorization': authToken
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil informasi akun');
+                }
+                
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    const info = result.data.InfoResultPayload;
+                    cashAmount = info.UserVirtualCurrency.RP || 0;
+                    accountName = info.AccountInfo.TitleInfo.DisplayName || 'Unknown';
+                    
+                    cashAmountElement.textContent = cashAmount.toLocaleString();
+                    accountNameElement.textContent = accountName;
+                    loginMethodElement.textContent = currentLoginMethod;
+                    
+                    return {
+                        name: accountName,
+                        balance: cashAmount
+                    };
+                } else {
+                    throw new Error(result.errorMessage || 'Error mengambil data');
+                }
+            } catch (error) {
+                showStatus('Gagal mengambil info: ' + error.message, false);
+                return null;
+            }
+        }
+        
+        async function modifyCash(amount) {
+            if (!authToken) {
+                showStatus('Silakan login terlebih dahulu', false);
+                return false;
+            }
+            
+            if (amount === 0) {
+                showStatus('Jumlah tidak boleh 0', false);
+                return false;
+            }
+            
+            setLoading(true);
+            
+            try {
+                previousBalance = cashAmount;
+                
+                const data = {
+                    FunctionName: "AddRp",
+                    FunctionParameter: { addValue: amount },
+                    RevisionSelection: "Live",
+                    GeneratePlayStreamEvent: false
+                };
+                
+                const response = await fetch(`${PLAYFAB_API_URL}/Client/ExecuteCloudScript`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Authorization': authToken
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('HTTP Error: ' + response.status);
+                }
+                
+                const result = await response.json();
+                
+                if (result.data && result.data.FunctionName === 'AddRp') {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await getUserInfo();
+                    
+                    const action = amount > 0 ? 'ditambahkan' : 'dikurangi';
+                    const absAmount = Math.abs(amount);
+                    
+                    showTransactionDetails(
+                        accountName,
+                        amount > 0 ? 'TOP UP' : 'REDUCE',
+                        absAmount,
+                        previousBalance,
+                        cashAmount,
+                        'SUCCESS'
+                    );
+                    
+                    showStatus(`Berhasil ${action} ${absAmount.toLocaleString()} cash!`, true);
+                    updateStatistics(true);
+                    
+                    selectedAmount = 0;
+                    amountInput.value = '';
+                    updateSelectedAmountDisplay();
+                    
+                    return true;
+                } else {
+                    const errorMsg = result.data?.Error?.Message || 'Gagal memproses';
+                    throw new Error(errorMsg);
+                }
+            } catch (error) {
+                showStatus('Gagal: ' + error.message, false);
+                updateStatistics(false);
+                return false;
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function deleteAccount() {
+            if (!authToken) {
+                showStatus('Silakan login terlebih dahulu', false);
+                return false;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const data = {
+                    FunctionName: "DeleteUsers",
+                    FunctionParameter: {},
+                    RevisionSelection: "Live",
+                    GeneratePlayStreamEvent: false
+                };
+                
+                const response = await fetch(`${PLAYFAB_API_URL}/Client/ExecuteCloudScript`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Authorization': authToken
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('HTTP Error: ' + response.status);
+                }
+                
+                const result = await response.json();
+                
+                if (result.data) {
+                    showStatus('Akun berhasil dihapus!', true);
+                    
+                    // Reset semua state
+                    authToken = "";
+                    cashAmount = 0;
+                    accountName = "";
+                    selectedAmount = 0;
+                    currentLoginMethod = "";
+                    
+                    // Kembali ke login screen
+                    setTimeout(() => {
+                        topupSection.style.display = 'none';
+                        loginSection.style.display = 'block';
+                        accountInfo.style.display = 'block';
+                        cashAmountElement.textContent = '-';
+                        accountNameElement.textContent = '-';
+                        licenseNameElement.textContent = '-';
+                        loginMethodElement.textContent = '-';
+                    }, 2000);
+                    
+                    return true;
+                } else {
+                    throw new Error('Gagal menghapus akun');
+                }
+            } catch (error) {
+                showStatus('Gagal menghapus akun: ' + error.message, false);
+                return false;
+            } finally {
+                setLoading(false);
+                deleteModal.style.display = 'none';
+            }
+        }
+
+        function contactAdmin() {
+            openWhatsAppForLicense(deviceId);
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Create particles
+            createParticles();
+            
+            // Generate dan tampilkan Permanent Device ID
+            deviceId = await getPermanentDeviceId();
+            deviceIdText.textContent = deviceId;
+            deviceIdInput.value = deviceId;
+            
+            // Auto check license saat page load
+            const license = await checkLicense(deviceId);
+            const isValidLicense = updateLicenseDisplay(license);
+
+            if (!isValidLicense) {
+                accessDenied.style.display = 'block';
+                topupSection.style.display = 'none';
+                loginSection.style.display = 'none';
+                accountInfo.style.display = 'none';
+                
+                setTimeout(() => {
+                    openWhatsAppForLicense(deviceId);
+                }, 2000);
+                return;
+            }
+
+            // Login tab switcher
+            loginTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchLoginTab(tab.dataset.tab);
+                });
+            });
+
+            // Device ID login
+            deviceLoginBtn.addEventListener('click', async () => {
+                const loginSuccess = await loginWithDeviceId(deviceId);
+                if (loginSuccess) {
+                    topupSection.style.display = 'block';
+                    loginSection.style.display = 'none';
+                }
+            });
+            
+            // X-Auth login
+            xauthLoginBtn.addEventListener('click', async () => {
+                const xAuthToken = xauthInput.value.trim();
+                if (!xAuthToken) {
+                    showStatus('Masukkan X-Authorization Token!', false);
+                    return;
+                }
+                
+                const loginSuccess = await loginWithXAuth(xAuthToken);
+                if (loginSuccess) {
+                    topupSection.style.display = 'block';
+                    loginSection.style.display = 'none';
+                }
+            });
+            
+            // Amount buttons
+            amountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    amountButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    selectedAmount = parseInt(this.dataset.amount);
+                    amountInput.value = selectedAmount;
+                    updateSelectedAmountDisplay();
+                });
+            });
+            
+            // Amount input change
+            amountInput.addEventListener('input', function() {
+                let value = parseInt(this.value) || 0;
+                
+                if (value > 2147483647) {
+                    value = 2147483647;
+                    this.value = value;
+                }
+                
+                selectedAmount = value;
+                
+                amountButtons.forEach(btn => {
+                    if (parseInt(btn.dataset.amount) === value) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                updateSelectedAmountDisplay();
+            });
+            
+            // Add cash button
+            addCashBtn.addEventListener('click', async () => {
+                if (selectedAmount <= 0) {
+                    showStatus('Pilih jumlah terlebih dahulu!', false);
+                    return;
+                }
+                
+                if (selectedAmount > 2147483647) {
+                    showStatus('Jumlah melebihi batas maksimal!', false);
+                    return;
+                }
+                
+                await modifyCash(selectedAmount);
+            });
+            
+            // Reduce cash button
+            reduceCashBtn.addEventListener('click', async () => {
+                if (selectedAmount <= 0) {
+                    showStatus('Pilih jumlah terlebih dahulu!', false);
+                    return;
+                }
+                
+                if (selectedAmount > cashAmount) {
+                    showStatus('Saldo tidak cukup!', false);
+                    return;
+                }
+                
+                await modifyCash(-selectedAmount);
+            });
+
+            // Refresh balance button
+            refreshBtn.addEventListener('click', async () => {
+                await getUserInfo();
+                showStatus('Saldo berhasil di-refresh!', true);
+            });
+
+            // Delete account button
+            deleteAccountBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'flex';
+            });
+
+            // Confirm delete
+            confirmDeleteBtn.addEventListener('click', deleteAccount);
+
+            // Cancel delete
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 </html>
