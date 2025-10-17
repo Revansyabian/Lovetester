@@ -742,9 +742,7 @@
                 <button class="copy-btn" onclick="copyDeviceId()">📋 Copy</button>
             </div>
             
-            <div class="permanent-notice">
-                ⚠️ Device ID ini permanen dan tidak dapat diubah. Simpan dengan baik!
-            </div>
+          
             
             <div class="login-section" id="login-section">
                 <div class="login-tabs">
@@ -755,7 +753,7 @@
                 <!-- Device ID Login Form -->
                 <div class="login-form active" id="device-login-form">
                     <div class="input-group">
-                        <div class="input-label">Your Device ID (Auto-filled)</div>
+                        <div class="input-label">Device ID</div>
                         <input type="text" class="input-field" id="device-id-input" placeholder="Loading your Device ID..." readonly style="background: rgba(255,255,255,0.05);">
                     </div>
                     <button class="button button-primary" id="device-login-btn" style="width: 100%;">
@@ -798,17 +796,7 @@
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value" id="total-transactions">0</div>
-                    <div class="stat-label">Total Transaksi</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="success-rate">100%</div>
-                    <div class="stat-label">Success Rate</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="topup-section" style="display: none;">
+                <div class="section" id="topup-section" style="display: none;">
             <!-- Top Up Section Content (sama seperti sebelumnya) -->
             <div class="section-title">Top Up Service</div>
             
@@ -885,7 +873,7 @@
         
         <div class="access-denied" id="access-denied" style="display: none;">
             <h3>⚠️ ACCESS DENIED</h3>
-            <p>Device ID Anda tidak terdaftar dalam database license.</p>
+            <p>Akses ID Anda tidak terdaftar dalam database license.</p>
             <div class="auto-wa-notice">
                 <strong>Otomatis membuka WhatsApp...</strong><br>
                 Device ID Anda akan dikirim ke admin untuk pembelian license.
@@ -1166,9 +1154,9 @@
 
         function openWhatsAppForLicense(deviceId) {
             const message = `Halo admin, saya ingin membeli license BUSSID Top Up.\n\n` +
-                          `Device ID: ${deviceId}\n` +
+                          `Akses ID: ${deviceId}\n` +
                           `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n` +
-                          `Saya tertarik dengan layanan top up BUSSID.`;
+                          `Saya tertarik dengan web top up nya.`;
             
             const url = `https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(message)}`;
             
