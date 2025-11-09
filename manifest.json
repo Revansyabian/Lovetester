@@ -1,5 +1,5 @@
 {
-  "name": "BUSSID Money Top Up",
+  "name": "REVAN STORE",
   "short_name": "BUSSID TopUp",
   "description": "Aplikasi top up money BUSSID premium dengan akses license",
   "start_url": "/",
@@ -12,49 +12,49 @@
   "categories": ["entertainment", "games", "utilities"],
   "icons": [
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-72x72.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-96x96.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-128x128.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-144x144.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-152x152.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-192x192.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-384x384.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-512x512.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -62,14 +62,14 @@
   ],
   "screenshots": [
     {
-      "src": "https://i.ibb.co/Q7qc788Z/screenshot1.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Dashboard utama BUSSID Top Up"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/screenshot2.png",
+      "src": "https://i.ibb.co/Q7qc788Z.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
