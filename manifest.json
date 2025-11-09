@@ -1,23 +1,28 @@
 {
-  "name": "BUSSID Money Top Up",
-  "short_name": "BUSSID TopUp",
-  "description": "Top Up Money BUSSID Premium Application",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#001f3f",
-  "theme_color": "#0074D9",
-  "orientation": "portrait",
-  "scope": "/",
-  "icons": [
+  "nama": "REVAN STORE",
+  "nama_pendek": "REVAN STR",
+  "description": "TOP UP BUSSID",
+  "start_url": "./index.html",
+  "tampilkan": "mandiri",
+  "warna_latar_belakang": "#0a0a0a",
+  "warna_tema": "#8a2be2",
+  "ikon": [
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "https://i.ibb.co/Q7qc788Z.png",
+      "ukuran": "192x192",
+      "ketik": "gambar/png"
     },
     {
-      "src": "https://i.ibb.co/Q7qc788Z/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "https://i.ibb.co/Q7qc788Z.png",
+      "ukuran": "512x512",
+      "ketik": "gambar/png"
+    },
+    {
+      "src": "https://i.ibb.co/Q7qc788Z.png",
+      "ukuran": "144x144",
+      "tipe": "gambar/png",
+      "tujuan": "dapat ditutup-tutupi"
     }
-  ]
+  ],
+  "orientasi": "potret"
 }
