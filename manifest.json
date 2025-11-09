@@ -8,19 +8,19 @@
   "warna_tema": "#8a2be2",
   "ikon": [
     {
-      "src": "https://i.ibb.co/Q7qc788Z.png",
+      "src": "https://i.ibb.co/wNPhHtD0/telegram-photo.jpg",
       "ukuran": "192x192",
-      "ketik": "gambar/png"
+      "ketik": "gambar/jpg"
     },
     {
       "src": "https://i.ibb.co/Q7qc788Z.png",
       "ukuran": "512x512",
-      "ketik": "gambar/png"
+      "ketik": "gambar/jpg"
     },
     {
       "src": "https://i.ibb.co/Q7qc788Z.png",
       "ukuran": "144x144",
-      "tipe": "gambar/png",
+      "tipe": "gambar/jpg",
       "tujuan": "dapat ditutup-tutupi"
     }
   ],
