@@ -1838,248 +1838,252 @@ maintenanceRef.on('value', (snapshot) => {
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // Firebase configuration untuk authentication - GUNAKAN SATU KONFIGURASI SAJA
-        const firebaseConfig = {
-            apiKey: "AIzaSyAYleQn2yLOdMwPzT5n6FPTLhiMnaFhnu8",
-            authDomain: "revanstore-a92a7.firebaseapp.com",
-            projectId: "revanstore-a92a7",
-            storageBucket: "revanstore-a92a7.firebasestorage.app",
-            messagingSenderId: "1054152032422",
-            appId: "1:1054152032422:web:83349880ce5cf4e4de3467",
-            measurementId: "G-FL822LMWEJ"
-        };
+        <!-- Firebase Auth Script - VERSI FIX -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script>
+    // ==================== KONFIGURASI FIREBASE ====================
+    const firebaseConfig = {
+        apiKey: "AIzaSyAYleQn2yLOdMwPzT5n6FPTLhiMnaFhnu8",
+        authDomain: "revanstore-a92a7.firebaseapp.com",
+        projectId: "revanstore-a92a7",
+        storageBucket: "revanstore-a92a7.firebasestorage.app",
+        messagingSenderId: "1054152032422",
+        appId: "1:1054152032422:web:83349880ce5cf4e4de3467",
+        measurementId: "G-FL822LMWEJ"
+    };
 
-        // Initialize Firebase Auth HANYA SEKALI
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        
-        // Konfigurasi Google Auth Provider
-        const provider = new GoogleAuthProvider();
-        
-        // Tambahkan scope tambahan jika diperlukan
-        provider.addScope('email');
-        provider.addScope('profile');
-        
-        // Set custom parameters untuk popup
-        provider.setCustomParameters({
-            prompt: 'select_account'
-        });
+    // ==================== INISIALISASI FIREBASE ====================
+    let auth;
+    try {
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
+        auth = firebase.auth();
+        console.log('✅ Firebase berhasil diinisialisasi');
+    } catch (error) {
+        console.error('❌ Error inisialisasi Firebase:', error);
+    }
 
-        // DOM Elements untuk auth
-        const loginBtn = document.getElementById('loginBtn');
-        const directLoginBtn = document.getElementById('directLoginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const loginSection = document.getElementById('loginSection');
-        const settingsSection = document.getElementById('settingsSection');
-        const userInfo = document.getElementById('userInfo');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const userAvatar = document.getElementById('userAvatar');
-        const userLoginTime = document.getElementById('userLoginTime');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const loginError = document.getElementById('loginError');
-        const loginErrorTitle = document.getElementById('loginErrorTitle');
-        const loginErrorMessage = document.getElementById('loginErrorMessage');
+    // ==================== DOM ELEMENTS ====================
+    const loginBtn = document.getElementById('loginBtn');
+    const directLoginBtn = document.getElementById('directLoginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginSection = document.getElementById('loginSection');
+    const settingsSection = document.getElementById('settingsSection');
+    const userInfo = document.getElementById('userInfo');
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+    const userAvatar = document.getElementById('userAvatar');
+    const userLoginTime = document.getElementById('userLoginTime');
+    const loginError = document.getElementById('loginError');
+    const loginErrorTitle = document.getElementById('loginErrorTitle');
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
 
-        // Fungsi untuk menampilkan error
-        function showLoginError(title, message) {
+    // ==================== FUNGSI UTAMA ====================
+    function showLoginError(title, message) {
+        if (loginErrorTitle && loginErrorMessage) {
             loginErrorTitle.textContent = title;
             loginErrorMessage.textContent = message;
             loginError.classList.add('active');
         }
+    }
 
-        // Fungsi untuk menyembunyikan error
-        function hideLoginError() {
+    function hideLoginError() {
+        if (loginError) {
             loginError.classList.remove('active');
         }
+    }
 
-        // Login function dengan popup - VERSI DIPERBAIKI
-        loginBtn.addEventListener('click', async () => {
-            try {
-                console.log('Memulai proses login dengan popup...');
-                hideLoginError();
-                
-                // Tampilkan indikator loading
-                const originalText = loginBtn.innerHTML;
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuka popup login...';
+    function showUserInfo(user) {
+        if (userName) userName.textContent = user.displayName || 'User';
+        if (userEmail) userEmail.textContent = user.email;
+        if (userAvatar) userAvatar.src = user.photoURL || 'https://via.placeholder.com/60/00BFFF/FFFFFF?text=User';
+        if (userLoginTime) {
+            const loginTime = new Date().toLocaleString('id-ID');
+            userLoginTime.textContent = `Login: ${loginTime}`;
+        }
+        
+        if (loginSection) loginSection.style.display = 'none';
+        if (settingsSection) settingsSection.style.display = 'block';
+        if (userInfo) userInfo.style.display = 'block';
+        
+        hideLoginError();
+    }
+
+    function hideUserInfo() {
+        if (loginSection) loginSection.style.display = 'block';
+        if (settingsSection) settingsSection.style.display = 'none';
+        if (userInfo) userInfo.style.display = 'none';
+    }
+
+    // ==================== LOGIN WITH GOOGLE ====================
+    async function loginWithGoogle() {
+        try {
+            console.log('🚀 Memulai login Google...');
+            hideLoginError();
+            
+            if (!auth) {
+                throw new Error('Firebase Auth belum terinisialisasi');
+            }
+
+            // Update button state
+            if (loginBtn) {
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuka login...';
                 loginBtn.disabled = true;
-                
-                // Coba buka popup login
-                const result = await signInWithPopup(auth, provider);
-                console.log('Login berhasil:', result.user);
-                
-                // Reset button state
-                loginBtn.innerHTML = originalText;
-                loginBtn.disabled = false;
-                
-            } catch (error) {
-                console.error('Error detail login:', error);
-                console.error('Error code:', error.code);
-                console.error('Error message:', error.message);
-                
-                // Reset button state
-                loginBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
-                loginBtn.disabled = false;
-                
-                // Handle error berdasarkan kode error
-                switch (error.code) {
-                    case 'auth/popup-blocked':
-                        showLoginError(
-                            'Popup Diblokir', 
-                            'Browser memblokir popup login. Silakan izinkan popup untuk website ini.'
-                        );
-                        break;
-                    case 'auth/popup-closed-by-user':
-                        console.log('User menutup popup login');
-                        // Tidak perlu menampilkan error untuk kasus ini
-                        break;
-                    case 'auth/cancelled-popup-request':
-                        console.log('Popup login dibatalkan');
-                        break;
-                    case 'auth/unauthorized-domain':
-                        showLoginError(
-                            'Domain Tidak Diizinkan',
-                            'Domain ini tidak diizinkan untuk login. Silakan hubungi administrator.'
-                        );
-                        break;
-                    case 'auth/operation-not-allowed':
-                        showLoginError(
-                            'Login Tidak Diaktifkan',
-                            'Login dengan Google belum diaktifkan. Silakan hubungi administrator.'
-                        );
-                        break;
-                    case 'auth/network-request-failed':
-                        showLoginError(
-                            'Koneksi Gagal',
-                            'Terjadi masalah koneksi internet. Silakan periksa koneksi Anda dan coba lagi.'
-                        );
-                        break;
-                    default:
-                        if (error.message.includes('about:blank')) {
-                            showLoginError(
-                                'Masalah Popup Login',
-                                'Terjadi masalah dengan popup login. Silakan coba metode login alternatif.'
-                            );
-                        } else {
-                            showLoginError(
-                                'Login Gagal',
-                                error.message || 'Terjadi kesalahan yang tidak diketahui.'
-                            );
-                        }
-                }
             }
-        });
 
-        // Login function dengan redirect (alternatif)
-        directLoginBtn.addEventListener('click', async () => {
-            try {
-                console.log('Memulai proses login dengan redirect...');
-                hideLoginError();
-                
-                // Tampilkan indikator loading
-                const originalText = directLoginBtn.innerHTML;
-                directLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengarahkan ke login...';
-                directLoginBtn.disabled = true;
-                
-                // Gunakan redirect sebagai alternatif
-                await signInWithRedirect(auth, provider);
-                
-            } catch (error) {
-                console.error('Error redirect login:', error);
-                
-                // Reset button state
-                directLoginBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Buka Halaman Login';
-                directLoginBtn.disabled = false;
-                
-                showLoginError(
-                    'Redirect Gagal',
-                    'Tidak dapat mengarahkan ke halaman login: ' + (error.message || 'Unknown error')
-                );
-            }
-        });
-
-        // Handle redirect result
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result) {
-                    console.log('Redirect login berhasil:', result.user);
-                }
-            })
-            .catch((error) => {
-                console.error('Redirect result error:', error);
+            // Setup Google Provider
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            provider.setCustomParameters({
+                prompt: 'select_account'
             });
 
-        // Logout function
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                console.log('Logout berhasil');
-                
-            } catch (error) {
-                console.error('Error logout:', error);
-                alert('Logout gagal: ' + error.message);
+            console.log('🔑 Membuka popup login...');
+            const result = await auth.signInWithPopup(provider);
+            console.log('✅ Login berhasil:', result.user);
+            
+            showUserInfo(result.user);
+            
+        } catch (error) {
+            console.error('❌ Error login:', error);
+            handleLoginError(error);
+        } finally {
+            // Reset button state
+            if (loginBtn) {
+                loginBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
+                loginBtn.disabled = false;
             }
-        });
+        }
+    }
 
-        // Auth state listener - VERSI DIPERBAIKI
-        onAuthStateChanged(auth, (user) => {
-            console.log('Auth state changed:', user);
+    // ==================== ERROR HANDLING ====================
+    function handleLoginError(error) {
+        console.log('Error code:', error.code);
+        console.log('Error message:', error.message);
+
+        let errorTitle = 'Login Gagal';
+        let errorMessage = 'Terjadi kesalahan saat login';
+
+        switch (error.code) {
+            case 'auth/popup-blocked':
+                errorTitle = 'Popup Diblokir';
+                errorMessage = 'Browser memblokir popup login. Silakan izinkan popup untuk website ini.';
+                break;
+                
+            case 'auth/popup-closed-by-user':
+                errorTitle = 'Login Dibatalkan';
+                errorMessage = 'Anda menutup jendela login. Silakan coba lagi.';
+                break;
+                
+            case 'auth/unauthorized-domain':
+                errorTitle = 'Domain Tidak Diizinkan';
+                errorMessage = `Domain "${window.location.hostname}" belum ditambahkan di Firebase Console. Silakan hubungi administrator.`;
+                break;
+                
+            case 'auth/operation-not-allowed':
+                errorTitle = 'Login Google Tidak Diaktifkan';
+                errorMessage = 'Login dengan Google belum diaktifkan di Firebase Console.';
+                break;
+                
+            case 'auth/network-request-failed':
+                errorTitle = 'Masalah Jaringan';
+                errorMessage = 'Terjadi masalah koneksi internet. Silakan periksa koneksi Anda.';
+                break;
+                
+            default:
+                if (error.message.includes('about:blank')) {
+                    errorTitle = 'Masalah Teknis';
+                    errorMessage = 'Terjadi masalah dengan jendela login. Silakan refresh halaman dan coba lagi.';
+                } else {
+                    errorMessage = error.message || 'Terjadi kesalahan yang tidak diketahui.';
+                }
+        }
+
+        showLoginError(errorTitle, errorMessage);
+    }
+
+    // ==================== LOGOUT ====================
+    async function logout() {
+        try {
+            if (auth) {
+                await auth.signOut();
+                console.log('✅ Logout berhasil');
+                hideUserInfo();
+                hideLoginError();
+            }
+        } catch (error) {
+            console.error('❌ Error logout:', error);
+            alert('Logout gagal: ' + error.message);
+        }
+    }
+
+    // ==================== AUTH STATE LISTENER ====================
+    if (auth) {
+        auth.onAuthStateChanged((user) => {
+            console.log('🔄 Auth state changed:', user);
             
             if (user) {
-                // User is signed in
-                loginSection.style.display = 'none';
-                settingsSection.style.display = 'block';
-                userInfo.style.display = 'block';
-                hideLoginError();
-                
-                // Update user info
-                userName.textContent = user.displayName || 'User';
-                userEmail.textContent = user.email;
-                userAvatar.src = user.photoURL || 'https://via.placeholder.com/60/00BFFF/FFFFFF?text=User';
-                
-                // Show login time
-                const loginTime = new Date().toLocaleString('id-ID');
-                userLoginTime.textContent = `Login: ${loginTime}`;
-                
-                console.log('User logged in:', user);
-                
-                // Simpan info user ke localStorage untuk persistensi
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userName', user.displayName || 'User');
-                localStorage.setItem('userEmail', user.email);
-                localStorage.setItem('userPhoto', user.photoURL || '');
-                
+                showUserInfo(user);
             } else {
-                // User is signed out
-                loginSection.style.display = 'block';
-                settingsSection.style.display = 'none';
-                userInfo.style.display = 'none';
-                
-                // Hapus info user dari localStorage
-                localStorage.removeItem('userLoggedIn');
-                localStorage.removeItem('userName');
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('userPhoto');
-                
-                console.log('User logged out');
+                hideUserInfo();
             }
         });
+    }
 
-        // Cek status login dari localStorage saat page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const userLoggedIn = localStorage.getItem('userLoggedIn');
-            if (userLoggedIn === 'true') {
-                console.log('User previously logged in, waiting for auth state...');
+    // ==================== EVENT LISTENERS ====================
+    if (loginBtn) {
+        loginBtn.addEventListener('click', loginWithGoogle);
+    }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+
+    // Direct Login Button (Alternative)
+    if (directLoginBtn) {
+        directLoginBtn.addEventListener('click', function() {
+            alert('Fitur ini akan membuka halaman login Google di tab baru. Pastikan popup tidak diblokir.');
+            loginWithGoogle();
+        });
+    }
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📱 Website BUSSID Top Up telah dimuat');
+        console.log('🌐 Domain saat ini:', window.location.hostname);
+        
+        // Check if user is already logged in
+        if (auth) {
+            const user = auth.currentUser;
+            if (user) {
+                console.log('👤 User sudah login:', user);
+                showUserInfo(user);
+            } else {
+                console.log('👤 Belum ada user yang login');
             }
-            
-            // Reset button states
+        }
+
+        // Reset button states
+        if (loginBtn) {
             loginBtn.disabled = false;
-            directLoginBtn.disabled = false;
             loginBtn.innerHTML = '<i class="fab fa-google"></i> Login dengan Google';
+        }
+        
+        if (directLoginBtn) {
+            directLoginBtn.disabled = false;
             directLoginBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Buka Halaman Login';
-        });
+        }
+    });
 
-        // Dark mode toggle
+    // ==================== DARK MODE TOGGLE ====================
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
         darkModeToggle.addEventListener('change', (e) => {
             if (e.target.checked) {
                 document.documentElement.setAttribute('data-theme', 'dark');
@@ -2096,7 +2100,8 @@ maintenanceRef.on('value', (snapshot) => {
             darkModeToggle.checked = true;
             document.documentElement.setAttribute('data-theme', 'dark');
         }
-
+    }
+</script>
         // Tambahkan event listener untuk menutup menu saat login/logout
         const navContainer = document.getElementById('navContainer');
         const overlay = document.getElementById('overlay');
